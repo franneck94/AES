@@ -23,6 +23,9 @@ using std::ifstream;
 // Read-In Datafile in Hex-Format and Vector of ByteArrays
 const vector<ByteArray> read_datafile(const string &file_path);
 
+// Write-In Datafile in Hex-Format and Vector of ByteArrays
+void write_datafile(const string &file_path, const vector<ByteArray> &encrypted);
+
 // Read-In Key Datafile in Hex-Format
 const ByteArray read_key(const string &file_path);
 

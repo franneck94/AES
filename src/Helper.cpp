@@ -54,7 +54,7 @@ const vector<ByteArray> read_datafile(const string &file_path)
 // Write-In Datafile in Hex-Format and Vector of ByteArrays
 void write_datafile(const string &file_path, const vector<ByteArray> &encrypted)
 {
-	ofstream outfile;
+	std::ofstream outfile;
 
 	outfile.open(file_path);
 

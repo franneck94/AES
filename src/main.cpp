@@ -11,7 +11,6 @@
 
 #include "Helper.hpp"
 #include "AES.hpp"
-#include "Mode.hpp"
 
 using std::cout;
 using std::endl;
@@ -20,27 +19,32 @@ using std::string;
 
 int main()
 {
-	// Define Variables
-	unsigned int iv_length = 12;
-
 	string file_path_messages = "C:/Users/Jan/Dropbox/_Programmieren/Kryptographie/AES/text.txt";
+	string file_path_encrypted = "C:/Users/Jan/Dropbox/_Programmieren/Kryptographie/AES/encrypted.txt";
 
-	vector<ByteArray> decrypted_solution;
-	vector<ByteArray> encrypted_solution;
-
-	// Load data from files
 	ByteArray key = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-	ByteArray IV = random_byte_array(iv_length);
 	vector<ByteArray> messages = read_datafile(file_path_messages);
 
-	encrypted_solution = counter_mode(messages, key, IV);
+	AES *aes = new AES(key);
+	vector<ByteArray> decrypted_solution(messages.size(), ByteArray(KEY_BLOCK, 0x00));
+	vector<ByteArray> encrypted_solution(messages.size(), ByteArray(KEY_BLOCK, 0x00));
 
+	for (int i = 0; i != messages.size(); ++i)
+	{
+		encrypted_solution[i] = aes->encrypt(messages[i]);
+	}
 
+	write_datafile(file_path_encrypted, encrypted_solution);
 
-	decrypted_solution = counter_mode_inverse(encrypted_solution, key, IV);
+	for (int i = 0; i != encrypted_solution.size(); ++i)
+	{
+		decrypted_solution[i] = aes->decrypt(encrypted_solution[i]);
+	}
 
 	cout << endl << "Legit solution: " << check_vector_of_byte_arrays(decrypted_solution, messages) << endl;
 
+	delete aes;
+	aes = nullptr;
 	getchar();
 }
